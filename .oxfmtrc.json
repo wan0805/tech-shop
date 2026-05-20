@@ -1,5 +1,12 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "tabWidth": 2,
+  "useTabs": false,
   "semi": false,
-  "singleQuote": true
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 100,
+  "endOfLine": "lf",
+  "vueIndentScriptAndStyle": false,
+  "quoteProps": "as-needed"
 }
