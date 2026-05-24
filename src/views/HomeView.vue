@@ -1,3 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ProductSearchControls from '@/components/shared/ProductSearchControls.vue';
+</script>
 
-<template></template>
+<template>
+  <ProductSearchControls/>
+</template>
