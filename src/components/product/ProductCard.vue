@@ -8,7 +8,7 @@ defineProps<{
 </script>
 <template>
   <RouterLink
-    :to="{ name: '', params: { id: product.id } }"
+    :to="{ name: 'productDetail', params: { id: product.id } }"
     class="flex items-center rounded-2xl bg-white shadow-lg hover:scale-95 transition-all duration-300"
   >
     <div class="rounded-2xl overflow-hidden">
