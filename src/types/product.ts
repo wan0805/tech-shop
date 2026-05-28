@@ -5,3 +5,17 @@ export interface Product {
   category: string
   thumbnail: string
 }
+
+export interface ProductDetail extends Product {
+  description: string
+  stock: number
+  reviews?: Review[]
+}
+
+export interface Review {
+  comment: string
+  date: string
+  rating: number
+  reviewerEmail: string
+  reviewerName: string
+}
