@@ -34,7 +34,7 @@ const toastStyle = computed(() => {
     <section
       v-if="isToast && toastType"
       :class="[
-        'fixed top-8 right-8 z-[2000] flex items-center gap-4 px-6 py-5 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white/20 min-w-[320px]',
+        'fixed top-8 right-8 z-2000 flex items-center gap-4 px-6 py-5 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white/20 min-w-[320px]',
         toastStyle.text,
       ]"
     >
