@@ -1,33 +1,32 @@
 <script setup lang="ts">
+import type { ProductDetail } from '@/types/product.ts'
 import { formatCurrency } from '@/utils/currency'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import BaseButton from '../common/BaseButton.vue'
 import CartIcon from '../icons/CartIcon.vue'
 import ProductReview from './ProductReview.vue'
-import type { ProductDetail } from '@/types/product.ts'
+
+import { useToast } from '@/composables/useToast.ts'
+const toast = useToast()
 
 const props = defineProps<{
   product: ProductDetail
 }>()
 
 
-const isLoad = ref(false)
-
-const emit = defineEmits(['update-stock'])
-
+const emit = defineEmits<{
+  (e: 'update-stock', productId: string | number, newStock: number): void
+}>()
 
 const stockCurrent = computed(() => props.product.stock)
 
-function addToCart() {
-  if (stockCurrent.value <= 0) return
-
-  isLoad.value = true
-
-  setTimeout(() => {
-    isLoad.value = false
-
-    emit('update-stock', props.product.id, stockCurrent.value - 1)
-  }, 2000)
+function addToCart(title: string) {
+  if (stockCurrent.value > 0) {
+    toast.showToast('success', `${title} added to cart`)
+    setTimeout(() => {
+      emit('update-stock', props.product.id, stockCurrent.value - 1)
+    }, 1500)
+  }
 }
 </script>
 <template>
@@ -76,8 +75,8 @@ function addToCart() {
           text="Add to Cart"
           text-loading="Adding to cart"
           :stock="stockCurrent"
-          @click="addToCart"
-          :loading="isLoad"
+          @click="addToCart(product.title)"
+          :loading="toast.isLoad.value"
         >
           <CartIcon class="w-5 h-5" />
         </BaseButton>
@@ -88,3 +87,4 @@ function addToCart() {
 </template>
 
 <style scoped></style>
+ 
