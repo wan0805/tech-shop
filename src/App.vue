@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TheHeader from './components/layout/TheHeader.vue'
+import ToastNotification from './components/toast/ToastNotification.vue';
 </script>
 
 <template>
@@ -8,6 +9,7 @@ import TheHeader from './components/layout/TheHeader.vue'
     <RouterView />
 
   </main>
+  <ToastNotification   />
 </template>
 
 <style scoped></style>
