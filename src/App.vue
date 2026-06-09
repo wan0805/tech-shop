@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SideCart from './components/cart/SideCart.vue'
 import TheFooter from './components/layout/TheFooter.vue'
 import TheHeader from './components/layout/TheHeader.vue'
 import ToastNotification from './components/toast/ToastNotification.vue'
@@ -12,6 +13,7 @@ import ToastNotification from './components/toast/ToastNotification.vue'
     </main>
     <TheFooter />
   </div>
+  <SideCart />
   <ToastNotification />
 </template>
 <style scoped></style>

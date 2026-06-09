@@ -9,23 +9,25 @@ import ProductReview from './ProductReview.vue'
 import { useToast } from '@/composables/useToast.ts'
 const toast = useToast()
 
+import { useCart } from '@/composables/useCart.ts'
+const { addProductToCart } = useCart()
+
 const props = defineProps<{
   product: ProductDetail
 }>()
-
 
 const emit = defineEmits<{
   (e: 'update-stock', productId: string | number, newStock: number): void
 }>()
 
-const stockCurrent = computed(() => props.product.stock)
+const stockCurrent = computed<number>(() => props.product.stock)
 
-function addToCart(title: string) {
+function addToCart(product: ProductDetail) {
   if (stockCurrent.value > 0) {
-    toast.showToast('success', `${title} added to cart`)
+    addProductToCart(product)
     setTimeout(() => {
-      emit('update-stock', props.product.id, stockCurrent.value - 1)
-    }, 1500)
+      emit('update-stock', props.product.id, stockCurrent.value)
+    }, 8000)
   }
 }
 </script>
@@ -75,7 +77,7 @@ function addToCart(title: string) {
           text="Add to Cart"
           text-loading="Adding to cart"
           :stock="stockCurrent"
-          @click="addToCart(product.title)"
+          @click="addToCart(product)"
           :loading="toast.isLoad.value"
         >
           <CartIcon class="w-5 h-5" />
@@ -87,4 +89,3 @@ function addToCart(title: string) {
 </template>
 
 <style scoped></style>
- 
