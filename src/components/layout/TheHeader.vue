@@ -3,6 +3,21 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import CartIcon from '../icons/CartIcon.vue'
 
+import { useCart } from '@/composables/useCart.ts'
+const { cart, openSideCart, closeSideCart } = useCart()
+
+import { useRoute } from 'vue-router'
+const route = useRoute()
+
+function handleCartClick() {
+  const currentRoute = route.name
+  if (currentRoute != 'cart') {
+    openSideCart()
+  } else {
+    closeSideCart()
+  }
+}
+
 const isScrolled = ref(false)
 
 function handleScroll() {
@@ -29,15 +44,16 @@ onUnmounted(() => {
         Tech Shop
       </router-link>
 
-      <button class="relative cursor-pointer">
+      <button class="relative cursor-pointer" @click="handleCartClick">
         <div>
           <CartIcon />
         </div>
 
         <div
           class="w-5 h-5 rounded-full flex items-center justify-center bg-accent absolute text-white text-sm -top-2 -right-2"
+         :class="{ 'hidden': cart.length === 0 }"
         >
-          2
+          {{ cart.length }}
         </div>
       </button>
     </div>
