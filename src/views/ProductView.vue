@@ -15,7 +15,7 @@ const mockProduct = ref({
   description:
     'The MacBook Pro 14 Inch in Space Grey is a powerful and sleek laptop, featuring Apples M1 Pro chip for exceptional performance and a stunning Retina display',
   price: 109.95,
-  stock: 8,
+  stock: 5,
   category: 'laptops',
   thumbnail:
     'https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp',
@@ -30,7 +30,7 @@ const mockProduct = ref({
   ],
 })
 
-function handleStockUpdate(productId: number, newStock: number) {
+function handleStockUpdate(productId: string | number, newStock: number) {
   if (mockProduct.value.id === productId) {
     mockProduct.value.stock = newStock
   }
@@ -39,7 +39,7 @@ function handleStockUpdate(productId: number, newStock: number) {
 onMounted(async () => {
   setTimeout(() => {
     productId.value = route.params.id
-  }, 5000)
+  }, 2000)
 })
 </script>
 <template>
