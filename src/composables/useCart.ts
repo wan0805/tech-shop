@@ -5,6 +5,8 @@ import { useToast } from './useToast'
 const toast = useToast()
 
 const isSideCart = ref(false)
+const isCheckOutModal = ref(false)
+const isPending = ref(false)
 
 const cart = ref<CartItem[]>([])
 
@@ -88,15 +90,31 @@ export function useCart() {
     }
   }
 
+  function openCheckOutModal() {
+    isPending.value = true
+    setTimeout(() => {
+      isPending.value = false
+      isCheckOutModal.value = true
+    }, 1500)
+  }
+
+  function closeCheckOutModal() {
+    isCheckOutModal.value = false
+  }
+
   return {
     isSideCart,
     cart,
     totalPrice,
+    isCheckOutModal,
+    isPending,
     openSideCart,
     closeSideCart,
     addProductToCart,
     incrementQuantity,
     decrementQuantity,
     removeProductByIndex,
+    openCheckOutModal,
+    closeCheckOutModal,
   }
 }
