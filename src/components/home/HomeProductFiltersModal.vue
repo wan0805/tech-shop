@@ -58,7 +58,7 @@ onUnmounted(() => {
       aria-modal="true"
       aria-labelledby="modal-title"
       v-if="props.open"
-      class="w-full h-full bg-black/05 backdrop-blur-sm text-white fixed top-0 right-0 flex items-center justify-center z-999 transform"
+      class="w-full h-full bg-black/95 backdrop-blur-sm text-white fixed top-0 right-0 flex items-center justify-center z-999 transform"
     >
       <div class="w-full sm:w-[50%] mx-4 bg-white p-6 text-black relative text-center rounded">
         <button
