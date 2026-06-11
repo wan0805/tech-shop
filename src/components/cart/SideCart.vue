@@ -110,7 +110,7 @@ const {
 
       <div class="space-y-3">
         <RouterLink
-          to="/"
+          to="/cart"
           class="block w-full bg-black text-white text-center rounded-xl py-3 md:py-4 font-bold hover:bg-gray-800 transition-all active:scale-[0.98] shadow-lg shadow-black/5"
           @click="closeSideCart"
         >
