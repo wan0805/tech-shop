@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CheckOutModal from './components/cart/CheckOutModal.vue'
 import SideCart from './components/cart/SideCart.vue'
 import TheFooter from './components/layout/TheFooter.vue'
 import TheHeader from './components/layout/TheHeader.vue'
@@ -15,5 +16,6 @@ import ToastNotification from './components/toast/ToastNotification.vue'
   </div>
   <SideCart />
   <ToastNotification />
+  <CheckOutModal />
 </template>
 <style scoped></style>
