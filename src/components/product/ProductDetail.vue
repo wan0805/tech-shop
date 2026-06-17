@@ -9,15 +9,15 @@ import ProductReview from './ProductReview.vue'
 import { useToast } from '@/composables/useToast.ts'
 const toast = useToast()
 
-import { useCart } from '@/composables/useCart.ts'
-const { cart, addProductToCart } = useCart()
+import { useCartStore } from '@/store/cartStore.ts'
+const cartStore = useCartStore()
 
 const props = defineProps<{
   product: ProductDetail
 }>()
 
 const stockCurrent = computed<number>(() => {
-  const cartItem = cart.value.find((item) => item.product.id === props.product.id)
+  const cartItem = cartStore.cart.find((item) => item.product.id === props.product.id)
   const quantityInCart = cartItem ? cartItem.quantity : 0
 
   return Math.max(0, props.product.stock - quantityInCart)
@@ -25,7 +25,7 @@ const stockCurrent = computed<number>(() => {
 
 function addToCart(product: ProductDetail) {
   if (stockCurrent.value > 0) {
-    addProductToCart(product)
+    cartStore.addProductToCart(product)
   }
 }
 </script>

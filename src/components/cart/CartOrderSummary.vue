@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { formatCurrency } from '@/utils/currency'
-
-import { useCart } from '@/composables/useCart'
 import BaseButton from '../common/BaseButton.vue'
-const { totalPrice, isPending, openCheckOutModal } = useCart()
+
+
+import { useCartStore } from '@/store/cartStore.ts'
+const cartStore = useCartStore()
 </script>
 <template>
   <section
@@ -15,7 +16,7 @@ const { totalPrice, isPending, openCheckOutModal } = useCart()
       <div class="flex justify-between text-gray-500 font-medium">
         <span>Subtotal</span>
 
-        <span class="text-gray-900">{{ formatCurrency(totalPrice) }}</span>
+        <span class="text-gray-900">{{ formatCurrency(cartStore.totalPrice) }}</span>
       </div>
       <div class="flex justify-between text-gray-500 font-medium">
         <span>Shipping</span>
@@ -31,7 +32,7 @@ const { totalPrice, isPending, openCheckOutModal } = useCart()
           <span class="text-gray-900 font-bold text-lg">Total</span>
           <div class="text-right">
             <span class="block text-3xl font-black text-black">{{
-              formatCurrency(totalPrice)
+              formatCurrency(cartStore.totalPrice)
             }}</span>
 
             <span class="text-[10px] text-gray-400 uppercase">Taxes included</span>
@@ -39,12 +40,12 @@ const { totalPrice, isPending, openCheckOutModal } = useCart()
         </div>
       </div>
       <BaseButton
-        @click="openCheckOutModal"
+        @click="cartStore.openCheckOutModal"
         class="w-full"
         text="Complete Purchase"
         :stock="1"
         text-loading="Processing..."
-        :loading="isPending"
+        :loading="cartStore.isPending"
       />
     </div>
   </section>

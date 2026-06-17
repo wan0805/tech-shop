@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import CardCreditIcon from '../icons/CardCreditIcon.vue'
 
-import { useCart } from '@/composables/useCart.ts'
-const { isCheckOutModal, closeCheckOutModal } = useCart()
+import { useCartStore } from '@/store/cartStore.ts'
+const cartStore = useCartStore()
 </script>
 <template>
   <Transition
@@ -16,7 +16,7 @@ const { isCheckOutModal, closeCheckOutModal } = useCart()
     <div
       role="dialog"
       aria-modal="true"
-      v-if="isCheckOutModal"
+      v-if="cartStore.isCheckOutModal"
       class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-sm"
     >
       <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100">
@@ -43,7 +43,7 @@ const { isCheckOutModal, closeCheckOutModal } = useCart()
         </div>
 
         <button
-          @click="closeCheckOutModal"
+          @click="cartStore.closeCheckOutModal"
           class="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-4 rounded-lg transition-all"
         >
           Continue Exploring

@@ -3,8 +3,9 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import CartIcon from '../icons/CartIcon.vue'
 
-import { useCart } from '@/composables/useCart.ts'
-const { cart, openSideCart, closeSideCart } = useCart()
+
+import { useCartStore } from '@/store/cartStore.ts'
+const cartStore = useCartStore()
 
 import { useRoute } from 'vue-router'
 const route = useRoute()
@@ -12,9 +13,9 @@ const route = useRoute()
 function handleCartClick() {
   const currentRoute = route.name
   if (currentRoute != 'cart') {
-    openSideCart()
+    cartStore.openSideCart()
   } else {
-    closeSideCart()
+    cartStore.closeSideCart()
   }
 }
 
@@ -51,9 +52,9 @@ onUnmounted(() => {
 
         <div
           class="w-5 h-5 rounded-full flex items-center justify-center bg-accent absolute text-white text-sm -top-2 -right-2"
-         :class="{ 'hidden': cart.length === 0 }"
+         :class="{ 'hidden': cartStore.cart.length === 0 }"
         >
-          {{ cart.length }}
+          {{ cartStore.cart.length }}
         </div>
       </button>
     </div>
