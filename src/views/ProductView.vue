@@ -4,50 +4,44 @@ import ProductDetail from '@/components/product/ProductDetail.vue'
 import ProductDetailSkeleton from '@/components/product/ProductDetailSkeleton.vue'
 import { onMounted, ref } from 'vue'
 
+import { useProductsStore } from '@/store/productStore'
+const productStore = useProductsStore()
+
 import { useRoute } from 'vue-router'
+import CloudOffIcon from '@/components/icons/CloudOffIcon.vue'
 const route = useRoute()
 
-const productId = ref<string[] | string>()
+const productId = Number(route.params.id)
 
-const mockProduct = ref({
-  id: 4,
-  title: 'Apple MacBook Pro 14 Inch Space Grey',
-  description:
-    'The MacBook Pro 14 Inch in Space Grey is a powerful and sleek laptop, featuring Apples M1 Pro chip for exceptional performance and a stunning Retina display',
-  price: 109.95,
-  stock: 5,
-  category: 'laptops',
-  thumbnail:
-    'https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp',
-  reviews: [
-    {
-      comment: 'Very happy with my purchase!',
-      date: '2025-04-30T09:41:02.053Z',
-      rating: 3,
-      reviewerEmail: 'hazel.evans@x.dummyjson.com',
-      reviewerName: 'Hazel Evans',
-    },
-  ],
-})
 
 function handleStockUpdate(productId: string | number, newStock: number) {
-  if (mockProduct.value.id === productId) {
-    mockProduct.value.stock = newStock
+  if (productStore.productDetail.id === productId) {
+    productStore.productDetail.stock = newStock
   }
 }
 
 onMounted(async () => {
-  setTimeout(() => {
-    productId.value = route.params.id
-  }, 2000)
+  await productStore.onLoadProductDetail(productId)
+  console.log(productStore.productDetail)
 })
 </script>
 <template>
-  <template v-if="productId">
-    <BaseBreadcrumb />
-    <ProductDetail :product="mockProduct" @update-stock="handleStockUpdate" />
+  <template v-if="productStore.isLoading">
+    <ProductDetailSkeleton />
   </template>
-  <ProductDetailSkeleton v-else />
+  <template v-if="productStore.productDetail">
+    <BaseBreadcrumb />
+    <ProductDetail :product="productStore.productDetail" @update-stock="handleStockUpdate" />
+  </template>
+  <template v-else>
+    <section class="flex flex-col items-center justify-center mb-35 col-span-full">
+      <div class="w-26 h-26 bg-gray-200 rounded-full flex items-center justify-center mb-5">
+        <CloudOffIcon class="w-16 h-16 text-gray-500 stroke-[1.2] animate-pulse" />
+      </div>
+
+      <p class="text-gray-500 text-center mx-auto">{{ productStore.error }}</p>
+    </section>
+  </template>
 </template>
 
 <style scoped></style>

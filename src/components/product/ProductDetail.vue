@@ -10,24 +10,22 @@ import { useToast } from '@/composables/useToast.ts'
 const toast = useToast()
 
 import { useCart } from '@/composables/useCart.ts'
-const { addProductToCart } = useCart()
+const { cart, addProductToCart } = useCart()
 
 const props = defineProps<{
   product: ProductDetail
 }>()
 
-const emit = defineEmits<{
-  (e: 'update-stock', productId: string | number, newStock: number): void
-}>()
+const stockCurrent = computed<number>(() => {
+  const cartItem = cart.value.find((item) => item.product.id === props.product.id)
+  const quantityInCart = cartItem ? cartItem.quantity : 0
 
-const stockCurrent = computed<number>(() => props.product.stock)
+  return Math.max(0, props.product.stock - quantityInCart)
+})
 
 function addToCart(product: ProductDetail) {
   if (stockCurrent.value > 0) {
     addProductToCart(product)
-    setTimeout(() => {
-      emit('update-stock', props.product.id, stockCurrent.value)
-    }, 8000)
   }
 }
 </script>

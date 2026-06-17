@@ -38,10 +38,9 @@ export function useCart() {
     const existingItem = cart.value.find((item) => item.product.id === product.id)
 
     if (existingItem) {
+      toast.showToast('success', `Increased quantity of ${product.title}`)
       incrementQuantity(existingItem.product)
     } else {
-      product.stock--
-
       cart.value.push({ product, quantity: 1 })
 
       toast.showToast('success', `${product.title} added to cart`)
@@ -68,12 +67,12 @@ export function useCart() {
     const existingItem = cart.value.find((item) => item.product.id === product.id)
 
     if (existingItem) {
-      if (product.stock === 0) {
+      if (existingItem.quantity >= product.stock) {
         toast.showToast('info', `Sorry, no more stock available!`)
-      } else {
-        existingItem.quantity++
-        product.stock--
+        return
       }
+
+      existingItem.quantity++
     }
   }
 
@@ -82,7 +81,6 @@ export function useCart() {
 
     if (existingItem) {
       if (existingItem.quantity > 1) {
-        product.stock++
         existingItem.quantity--
       } else {
         removeProductByIndex(index)
