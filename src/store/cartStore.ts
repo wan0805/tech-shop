@@ -1,26 +1,27 @@
-import type { Cart, CartItem } from '@/types/cart'
+import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { useToast } from './useToast'
 
-const toast = useToast()
+import { useToast } from '@/composables/useToast'
+import type { Cart, CartItem } from '@/types/cart'
 
-const isSideCart = ref(false)
-const isCheckOutModal = ref(false)
-const isPending = ref(false)
+export const useCartStore = defineStore('cart', () => {
+  const toast = useToast()
 
-const cart = ref<CartItem[]>([])
+  const isSideCart = ref(false)
+  const isCheckOutModal = ref(false)
+  const isPending = ref(false)
 
-const totalPrice = computed(() => {
-  const total = cart.value.reduce((acumulador, item) => {
-    const qtd = item.quantity || 0
+  const cart = ref<CartItem[]>([])
 
-    return acumulador + item.product.price * qtd
-  }, 0)
+  const totalPrice = computed(() => {
+    const total = cart.value.reduce((acumulador, item) => {
+      const qtd = item.quantity || 0
 
-  return Number(total.toFixed(2))
-})
+      return acumulador + item.product.price * qtd
+    }, 0)
 
-export function useCart() {
+    return Number(total.toFixed(2))
+  })
   function openSideCart() {
     isSideCart.value = true
   }
@@ -88,12 +89,14 @@ export function useCart() {
     }
   }
 
-  function openCheckOutModal() {
+  async function openCheckOutModal() {
     isPending.value = true
-    setTimeout(() => {
-      isPending.value = false
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
       isCheckOutModal.value = true
-    }, 1500)
+    } finally {
+      isPending.value = false
+    }
   }
 
   function closeCheckOutModal() {
@@ -115,4 +118,4 @@ export function useCart() {
     openCheckOutModal,
     closeCheckOutModal,
   }
-}
+})

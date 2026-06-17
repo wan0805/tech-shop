@@ -6,37 +6,28 @@ import BaseButton from '../common/BaseButton.vue'
 import CartIcon from '../icons/CartIcon.vue'
 import RemoveIcon from '../icons/RemoveIcon.vue'
 
-import { useCart } from '@/composables/useCart.ts'
-
-const {
-  isSideCart,
-  cart,
-  totalPrice,
-  closeSideCart,
-  incrementQuantity,
-  decrementQuantity,
-  removeProductByIndex,
-} = useCart()
+import { useCartStore } from '@/store/cartStore.ts'
+const cartStore = useCartStore()
 </script>
 <template>
   <div
-    v-if="isSideCart"
+    v-if="cartStore.isSideCart"
     class="fixed inset-0 bg-black/95 backdrop-blur z-40 transition-all duration-500"
-    @click="closeSideCart"
+    @click="cartStore.closeSideCart"
   ></div>
 
   <aside
-    :class="isSideCart ? 'translate-x-0' : 'translate-x-full'"
+    :class="cartStore.isSideCart ? 'translate-x-0' : 'translate-x-full'"
     class="fixed right-0 top-0 h-full w-full md:max-w-md bg-white shadow-[[-20px_0_50px_rgba(0,0,0,0.1)]] z-50 transition-transform duration-500 ease-in-out flex flex-col"
   >
     <div class="p-5 md:p-8 flex justify-between items-center border-b border-gray-50">
       <div>
         <h2 class="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Your Cart</h2>
-        <p class="text-xs md:text-sm text-gray-500">{{ cart.length }} items</p>
+        <p class="text-xs md:text-sm text-gray-500">{{ cartStore.cart.length }} items</p>
       </div>
       <button
         class="p-2 hover:bg-gray-100 rounded-full transition-colors group"
-        @click="closeSideCart"
+        @click="cartStore.closeSideCart"
       >
         <span class="text-gray-400 group-hover:text-black">✕</span>
       </button>
@@ -44,7 +35,11 @@ const {
 
     <div class="flex-1 overflow-y-auto p-5 md:p-8 space-y-6">
       <div>
-        <div v-for="(item, index) in cart" :key="item.product.id" class="flex gap-4 group">
+        <div
+          v-for="(item, index) in cartStore.cart"
+          :key="item.product.id"
+          class="flex gap-4 group"
+        >
           <div class="w-16 h-16 md:w-20 md:h-20 bg-gray-100 rounded-2xl overflow-hidden shrink-0">
             <img
               :src="item.product.thumbnail"
@@ -62,11 +57,11 @@ const {
             <div class="flex items-center justify-between mt-1">
               <BaseQuantitySelector
                 :quantity="item.quantity ?? 1"
-                @increase="incrementQuantity(item.product)"
-                @decrease="decrementQuantity(item.product, index)"
+                @increase="cartStore.incrementQuantity(item.product)"
+                @decrease="cartStore.decrementQuantity(item.product, index)"
               />
               <button
-                @click="removeProductByIndex(index)"
+                @click="cartStore.removeProductByIndex(index)"
                 type="button"
                 title="Delete"
                 aria-label="Delete Item"
@@ -80,7 +75,7 @@ const {
       </div>
 
       <div
-        v-if="cart.length === 0"
+        v-if="cartStore.cart.length === 0"
         class="h-full flex flex-col items-center justify-center text-center space-y-4"
       >
         <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center">
@@ -94,16 +89,18 @@ const {
       <div class="space-y-3 mb-6">
         <div class="flex justify-between text-gray-500 text-sm">
           <span>Shipping</span>
-          <span v-if="totalPrice === 0" class="text-gray-900 font-medium">-----</span>
+          <span v-if="cartStore.totalPrice === 0" class="text-gray-900 font-medium">-----</span>
           <span v-else class="text-gray-900 font-medium">Calculated next step</span>
         </div>
         <div class="flex justify-between items-end">
           <span class="text-gray-900 font-bold text-lg">Subtotal</span>
-          <span v-if="totalPrice === 0" class="text-xl md:text-2xl font-black text-gray-900"
+          <span
+            v-if="cartStore.totalPrice === 0"
+            class="text-xl md:text-2xl font-black text-gray-900"
             >----</span
           >
           <span v-else class="text-xl md:text-2xl font-black text-gray-900">{{
-            formatCurrency(totalPrice)
+            formatCurrency(cartStore.totalPrice)
           }}</span>
         </div>
       </div>
@@ -112,13 +109,13 @@ const {
         <RouterLink
           to="/cart"
           class="block w-full bg-black text-white text-center rounded-xl py-3 md:py-4 font-bold hover:bg-gray-800 transition-all active:scale-[0.98] shadow-lg shadow-black/5"
-          @click="closeSideCart"
+          @click="cartStore.closeSideCart"
         >
           Checkout Now
         </RouterLink>
 
         <BaseButton
-          @click="closeSideCart"
+          @click="cartStore.closeSideCart"
           class="w-full bg-transparent border border-gray-200 text-gray-900! py-3 md:py-4 font-bold hover:bg-white hover:border-black hover:text-black transition-all"
           text="Continue Shopping"
           :stock="1"

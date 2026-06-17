@@ -5,12 +5,12 @@ import PackageOpenIcon from '../icons/PackageOpenIcon.vue'
 import RemoveIcon from '../icons/RemoveIcon.vue'
 import CartOrderSummary from './CartOrderSummary.vue'
 
-import { useCart } from '@/composables/useCart'
-const { cart, incrementQuantity, decrementQuantity, removeProductByIndex } = useCart()
+import { useCartStore } from '@/store/cartStore.ts'
+const cartStore = useCartStore()
 </script>
 <template>
   <main
-    v-if="cart.length > 0"
+    v-if="cartStore.cart.length > 0"
     class="grid grid-cols-1 lg:grid-cols-12 gap-12 p-6 max-w-6xl mx-auto mt-8 mb-32 rounded-3xl items-start bg-white/70 backdrop-blur-md"
   >
     <section class="lg:col-span-8">
@@ -18,7 +18,7 @@ const { cart, incrementQuantity, decrementQuantity, removeProductByIndex } = use
 
       <div class="space-y-0">
         <div
-          v-for="(item, index) in cart"
+          v-for="(item, index) in cartStore.cart"
           :key="item.product.id"
           class="group flex flex-col sm:flex-row items-center border-b border-gray-100 py-8 gap-6 transition-all"
         >
@@ -38,8 +38,8 @@ const { cart, incrementQuantity, decrementQuantity, removeProductByIndex } = use
 
           <base-quantity-selector
             :quantity="item.quantity"
-            @increase="incrementQuantity(item.product)"
-            @decrease="decrementQuantity(item.product, index)"
+            @increase="cartStore.incrementQuantity(item.product)"
+            @decrease="cartStore.decrementQuantity(item.product, index)"
           />
 
           <div class="flex flex-col items-end gap-2 min-w-25">
@@ -47,7 +47,7 @@ const { cart, incrementQuantity, decrementQuantity, removeProductByIndex } = use
               {{ formatCurrency(item.product.price * item.quantity) }}
             </p>
             <button
-              @click="removeProductByIndex(index)"
+              @click="cartStore.removeProductByIndex(index)"
               type="button"
               title="Delete"
               aria-label="Delete Item"
