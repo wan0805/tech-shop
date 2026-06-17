@@ -2,17 +2,16 @@
 import BaseBreadcrumb from '@/components/common/BaseBreadcrumb.vue'
 import ProductDetail from '@/components/product/ProductDetail.vue'
 import ProductDetailSkeleton from '@/components/product/ProductDetailSkeleton.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, watchEffect } from 'vue'
 
 import { useProductsStore } from '@/store/productStore'
 const productStore = useProductsStore()
 
-import { useRoute } from 'vue-router'
 import CloudOffIcon from '@/components/icons/CloudOffIcon.vue'
+import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const productId = Number(route.params.id)
-
 
 function handleStockUpdate(productId: string | number, newStock: number) {
   if (productStore.productDetail.id === productId) {
@@ -20,9 +19,14 @@ function handleStockUpdate(productId: string | number, newStock: number) {
   }
 }
 
+watchEffect(() => {
+  if (productStore.productDetail?.title) {
+    document.title = `${productStore.productDetail.title}`
+  }
+})
+
 onMounted(async () => {
   await productStore.onLoadProductDetail(productId)
-  console.log(productStore.productDetail)
 })
 </script>
 <template>
