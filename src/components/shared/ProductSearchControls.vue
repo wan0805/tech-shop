@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import ProductFiltersModal from '@/components/home/HomeProductFiltersModal.vue'
+import { ref } from 'vue'
 
+import { useProductsStore } from '@/store/productStore'
+const productStore = useProductsStore()
 
 type ModalType = 'filter' | 'sort' | null
-
-const filter = ref('')
-const sort = ref('')
-const filterOptions = ['laptops', 'smartphones']
-const sortOptions = ['Price, high to low', 'Price, low to High']
 
 const activeModalType = ref<ModalType>(null)
 
@@ -19,10 +16,10 @@ function openModal(type: 'filter' | 'sort') {
   activeModalType.value = type
   if (type === 'filter') {
     modalTitle.value = 'Filter by'
-    modalSelection.value = filterOptions
+    modalSelection.value = productStore.filterOptions
   } else {
     modalTitle.value = 'Sort by'
-    modalSelection.value = sortOptions
+    modalSelection.value = productStore.sortOptions
   }
 }
 
@@ -32,18 +29,18 @@ function handleCloseModal() {
 
 function handleUpdate(item: string) {
   if (activeModalType.value === 'filter') {
-    filter.value = item
+    productStore.filter = item
   } else if (activeModalType.value === 'sort') {
-    sort.value = item
+    productStore.sort = item
   }
   handleCloseModal()
 }
 
 function handleReset(type: 'filter' | 'sort') {
   if (type === 'filter') {
-    filter.value = ''
+    productStore.filter = ''
   } else {
-    sort.value = ''
+    productStore.sort = ''
   }
   handleCloseModal()
 }
@@ -51,10 +48,10 @@ function handleReset(type: 'filter' | 'sort') {
 <template>
   <section class="w-full mb-24 m-auto flex flex-col sm:flex-row gap-2 items-center justify-between">
     <button class="cursor-pointer" @click="openModal('filter')">
-      Filter by: <span class="text-blue-400">{{ filter }}</span>
+      Filter by: <span class="text-blue-400">{{ productStore.filter }}</span>
     </button>
     <button class="cursor-pointer" @click="openModal('sort')">
-      Sort by: <span class="text-blue-400">{{ sort }}</span>
+      Sort by: <span class="text-blue-400">{{ productStore.sort }}</span>
     </button>
   </section>
   <teleport to="body">
@@ -62,8 +59,8 @@ function handleReset(type: 'filter' | 'sort') {
       :open="activeModalType !== null"
       :title="modalTitle"
       :selection="modalSelection"
-      :show-clear-filter="activeModalType === 'filter' && !!filter"
-      :show-clear-sort="activeModalType === 'sort' && !!sort"
+      :show-clear-filter="activeModalType === 'filter' && !!productStore.filter"
+      :show-clear-sort="activeModalType === 'sort' && !!productStore.sort"
       @close="handleCloseModal"
       @selected="handleUpdate"
       @erase="handleReset"
