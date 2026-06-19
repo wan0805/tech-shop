@@ -1,17 +1,27 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import { useToast } from '@/composables/useToast'
 import type { Cart, CartItem } from '@/types/cart'
+import { storage } from '@/utils/storage'
 
 export const useCartStore = defineStore('cart', () => {
   const toast = useToast()
+  const { getStorage, setStorage } = storage()
 
   const isSideCart = ref(false)
   const isCheckOutModal = ref(false)
   const isPending = ref(false)
 
-  const cart = ref<CartItem[]>([])
+  const cart = ref<CartItem[]>(getStorage('cart') || [])
+
+  watch(
+    cart.value,
+    (newCart) => {
+      setStorage('cart', newCart)
+    },
+    { deep: true },
+  )
 
   const totalPrice = computed(() => {
     const total = cart.value.reduce((acumulador, item) => {
